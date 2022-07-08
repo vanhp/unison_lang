@@ -1,0 +1,116 @@
+-- Funtions 
+
+-- A Unison function start with a type signature is followed by a corresponding function implementation
+-- a function indicate by the right arrow -> the left side is the input(argument) and the right side
+-- is the output(return type)
+
+addOne : Nat -> Nat
+addOne n1 =
+  use Nat +
+  n1 + 1
+
+-- Function that take 2 input
+-- function arguments are indicated to the left of each arrow ->
+-- and the return type of the signature is the last type on the right of the arrow.
+-- arguments to function is separated by space not comma
+addNums : Nat -> Nat -> Nat
+addNums n1 n2 =
+  use Nat +
+  n1 + n2
+
+-- calling a two argument function
+addNums 2 4
+
+
+
+-- Currying
+-- Unison function arguments are curried which indicate that the function only take one argument at a time
+-- and return a function that take another argument and so on until all the arguments are taken
+addOneCurried : Nat -> Nat
+addOneCurried count =
+  plusOne : Nat -> Nat
+  plusOne = addNums 1
+  plusOne count
+
+addOneCurried 100
+
+-- Function application
+-- starts with the leftmost argument. for Function that take multiple arguments
+-- you can think of it as each argument being fed to successive functions from left to right
+
+add3 : Nat -> Nat -> Nat -> Nat
+add3 a b c = a + b + c
+
+((add3 1) 2) 3
+
+-- Block syntax
+-- A block is a section of Unison code which is grouped together to organize smaller units of code.
+-- A code block start via indentation or via a let block.Everything at the same indentation level 
+-- is within the same block and therefore shares the same lexical scope
+
+repeatNum : Nat -> Text
+repeatNum num =
+  text = Nat.toText num
+  Text.repeat num text
+
+-- or this
+repeatNum : Nat -> Text
+repeatNum num = let
+  text = toText num
+  Text.repeat num text
+
+-- Block can be nested within other blocks, and terms in inner blocks can 
+-- reference terms from their enclosing blocks.
+nesting : [Text]
+nesting =
+  parent = "outer"
+  inner1 = let
+    child1 = "child1"
+    inner2 = let
+      child2 = "child2"
+      [parent, child1, child2]
+    inner2
+  inner1
+
+-- The last thing evaluated in a code block is the return value for that entire code block
+myFunction : Text
+myFunction =
+  use Nat +
+  1 + 1
+  "I am unreachable!"
+  unusedTermDefinition = ?a
+  "I am what is returned."
+
+myFunction
+
+
+-- Lambda syntax
+-- Lambdas, or anonymous functions are unnamed functions which are defined 
+-- without going through the entire term declaration process. 
+-- it's used when the function doesn't need to be reused 
+-- elsewhere in the program or when the function itself is very simple.
+-- The section elem -> elem Nat.+ 1 is the lambda. 
+-- Anything to the left of the arrow represents the parameters to the function 
+-- and the expression to the right is the function body.
+
+use Nat +
+a = [1, 2, 3, 4, 5]
+List.map (elem -> elem + 1) a
+
+-- multi-line expressions when combined with theblock syntax.
+List.map
+  (i ->
+    use Nat +
+    x = i + 1
+    y = x + 1
+    z = y + 1
+    z) [1, 2, 3]
+
+-- A lambda with two or more arguments is represented by 
+-- separating the function arguments with spaces.
+List.foldLeft (acc a -> a Nat.+ acc) 0 [1, 2, 3, 4]
+
+-- to ignore the argument to the lambda altogether with the underscore symbol
+a = [1, 2, 3, 4, 5]
+List.map (_ -> 10) a
+

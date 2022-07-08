@@ -1,0 +1,30 @@
+-- Unison
+-- Unison is eaguer evaluated expression as soon as is available
+-- but delay evaluation is possible with the thunk function that
+-- is a function that take no input but return a desire result as
+-- in () -> wanted_value
+
+-- the _ on the left of = is used to represented () argument
+longText : () -> Text
+longText _ = "🐵 Imagine infinite monkeys on infinite typewriters 🙊…"
+
+-- or short hand with '
+longText : 'Text
+longText = '"🐵 Imagine infinite monkeys on infinite typewriters 🙊…"
+
+-- calling (execute) thunk function with ! short hand 
+coinflip : Boolean -> Text
+coinflip bool = if bool then !longText else "Hi"
+
+-- to call a thunk function with argument and return the result of function
+-- in the thunk function, must use parenthesis before ' symbol
+-- the single quote syntax delays thefunction in that circumstance, 
+-- not the result of evaluating the function. this is because 
+-- 'coinflip true has the signature (() -> Boolean) -> Text) not Boolean -> Text
+-- that why a parenthesis is needed to delay the execution of a expression
+
+delayedText : 'Text
+delayedText = '(coinflip true) -- call with argument
+!delayedText                   -- execute the thunk
+
+"🐵 Imagine infinite monkeys on infinite typewriters 🙊…"

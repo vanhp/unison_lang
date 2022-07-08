@@ -1,0 +1,31 @@
+
+-- Collection data structure in Unison
+
+-- List
+-- List can only contain values of one type at a time, and are eagerly evaluated
+-- Lists are immutable  finitite and homogenous  (every element must have the same type)
+-- is parameterized on the type of elements of the lists
+-- An empty list is simply represented with 
+-- [] or with List.empty
+
+desserts : [Text]
+desserts = ["Eclair", "Peach cobbler", "Ice cream"]
+
+
+-- Maps
+-- The Map type is Unison's way of mapping unique keys to values.
+-- create a map with a single object with
+Map.singleton 1 "a" 
+-- where 1 is the key and "a" is the value associated with that key.
+
+-- to create a multi item map is from a List of tuples
+
+Map.fromList [(1, "a"), (2, "b"), (3, "c")]
+
+-- Sets
+-- A Map whose values are all Unit,() ,can be translated into a Set
+-- by wrapping the map in Set's data constructor
+map = Map.fromList [(1, ()), (2, ()), (3, ())]
+Set.Set map
+
+

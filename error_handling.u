@@ -1,0 +1,56 @@
+-- Error handling
+
+-- Unison uses abilities to manage error in a program with less complexity than
+-- create a new data type for error handling
+
+-- Abort
+-- terminate a program with no info about the failure
+divBy : Nat -> Nat ->{Abort} Nat
+divBy a b =
+  match b with
+    0 -> abort
+    n ->
+      use Nat /
+      a / b
+since the ability is indicate in the return signature which 
+mean the caller must handle it or pass on by indicate in the its onw signature
+
+myDevision : Nat -> Nat ->{Abort} Nat
+myDevision a b =
+  use Nat *
+  divBy a b * 2
+-- it's common to translate between errors as represented by 
+-- a data type and errors as expressed through abilities. The ability can be eliminate
+-- by translate it to optional using toOptional!
+toOptional! '(divBy 1 0)
+-- or vice versa
+Some 4 |> toAbort
+
+-- Throw
+-- he Throw ability will stop a computation and return a value of 
+-- a specific type when an error condition occurs. For this reason Throw
+-- is parameterized by the possible error type in function signatures which require it.
+divByThrow : Nat -> Nat ->{Throw Text} Nat
+divByThrow a b =
+  match b with
+    0 -> throw "Cannot divide by zero"
+    n ->
+      use Nat /
+      a / b
+-- can eliminate the ability requirement for Throw by translating it to a Either
+-- with the toEither handler.
+toEither '(divByThrow 1 0)
+Left "Cannot divide by zero"
+
+-- Exception
+-- The Exception ability is similar to the Throw
+-- ability, except the error type is pinned to be a data type called Failure
+-- which will raise the error to cnclosing handler.
+divByException : Nat -> Nat ->{Exception} Nat
+divByException a b =
+  match b with
+    0 -> raise (Generic.failure "Cannot divide by zero" b)
+    n ->
+      use Nat /
+      a / b
+

@@ -1,0 +1,28 @@
+-- Unison support
+-- if, then,else construct
+-- first argument to the conditional must be an expression which returns a Boolean
+-- code block use indentation to start or end a block code that indent to the same level
+-- is belong to that block. code in higher indent level signify the end of the lower block
+myList : [Nat]
+myList = [1, 2, 3, 4, 5, 6, 7]
+mySimpleTerm =
+  if List.contains 5 myList then "high five" else "no five found"
+mySimpleTerm
+
+-- "high five"
+
+myList = List.range 0 99
+myListFunction =
+  if List.contains 100 myList then "100 found"
+  else
+    if List.any (elem -> Nat.mod elem 2 === 0) myList then
+      "Even found"
+    else "Condition not met"
+myListFunction
+
+-- "Even found"
+
+-- Boolean Expressions
+-- and &&
+-- or ||
+-- not

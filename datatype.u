@@ -1,0 +1,43 @@
+
+-- Unison Data type
+
+-- Use the type keyword to define a type. A type definition needs a modifier of
+-- unique or structural before it the values after the equals sign are known as
+-- data constructors. Each data constructor is separated by a pipe which means that the
+-- Genre type can be Poetry or Fiction or CookBooks etc.
+
+-- Type constructor
+-- Unison type constructor is called data constructor it appear on the right side of =
+-- and can be any name. It is a function whose job is to create a type as indicate on the left side.
+-- It takes the input argument and return the type to the left side 
+
+
+-- type modifier
+-- Unison have two type modifier structural and unique modifier.
+-- Structural signify that the type is structurally identical and may replace with similar Structure
+-- Unique modifer indicate that the type is one of a kind and can not be substituted with any type and
+-- its name is not interchangeble.
+
+-- Structure modifer
+-- Use structural to indicate that name is not important so the 
+-- type is identical to each other and interchangeble even with difference name.
+-- when the data constructor and paramenter are the same type
+-- it serves as generic T a place holder for specific type
+structural type Weekday = Mon | Tues | Wed | Thurs | Fri
+
+-- Unique modifier
+-- Use to indicate that the name is semantically important can't be substituted
+unique type Genre
+    = Fiction
+    | Poetry
+    | CookBooks
+    | Science
+    | Biography
+
+structural type Either a b = Right b | Left a
+unique type Box a = Box b
+
+-- where a and b are type parameter or place holder (T)
+-- on the right side of = is a type constructor
+
+-- Either data type use to represent case where a value can be one or the other 

@@ -1,0 +1,55 @@
+-- Unison have some special operator to work with function application
+-- Change the order of function that apply to ites arguments
+
+-- Compose operator take in two functions b -> c and a -> b
+-- return a new function that combine both features a -> c
+-- left-associative (group with leftmost expression first)
+a << b
+<< : (b ->{𝕖} c) -> (a ->{𝕖} b) -> a ->{𝕖} c
+-- read a after b
+composeEx : Nat -> Boolean
+composeEx = not << Nat.isEven
+
+composeMultiEx : Text -> Boolean
+composeMultiEx = not << Nat.isEven << Text.size
+
+-- The expression is actually parsed as:
+((Boolean.not << Nat.isEven) << Text.size)
+
+-- andThen operator
+-- like compose but with function argument in reverse order
+-- take two functions a->b and b->c and return a->c function
+a >> b
+>> : (a ->{𝕖} b) -> (b ->{𝕖} c) -> a ->{𝕖} c
+andThenEx : Boolean
+andThenEx = ((>>) Nat.isEven not 4)
+
+andThenMultiEx : Boolean
+andThenMultiEx = ((>>) (Text.size >> Nat.isEven) not "Boo")
+
+-- pipe forward operator
+a |> b
+|> : a -> (a ->{𝕖} b) ->{𝕖} b
+
+-- the argument to function is on the left side feed into function on right side
+-- apply the argument to the function and return the result from 
+-- that function.It's used for chaining multiple expression together
+pipeRightEx : Optional Nat
+pipeRightEx =
+  use Nat +
+  Some 5 |> Optional.filter Nat.isEven |> Optional.map (n -> n + 1)
+
+pipeEx : Boolean
+pipeEx = isSome (Optional.filter Nat.isEven (Some 5))
+
+-- pipe backward operator
+a <| b
+<| : (a ->{𝕖} b) -> a ->{𝕖} b
+-- the argument to function is on the right
+-- the function is on the left of the operator
+-- use for preprocessing the argument before feed it to function
+-- does not change operator precedence 
+-- the leftmost sub-expression still executed first
+pipeBackwardsEx : Optional Nat
+pipeBackwardsEx =
+  Optional.filter Nat.isEven <| pipeBackwardsEx.wrap 5

@@ -1,0 +1,72 @@
+-- Unison support rich set of pattern matching
+
+-- matching on literals
+
+-- the pattern match syntax match f with identifies the target value that 
+-- the pattern match will make its comparisons against. After the with
+-- keyword, Unison expects a series of arrow -> separated cases.
+-- the value f will be compared against each value to the left of the arrow ->, 
+-- starting from the top. The order is important you should put the most specific
+-- one first follow with the less specfic one and the catch all _ last.
+--  If there is a match only the one on the right side is evaluated.
+-- you should make sure that it cover all available cases of the target f
+
+foodUnit : Text -> Text
+foodUnit f =
+  "👇 compare f with the following..."
+  match f with
+    "Pie"     -> "slice"
+    "Coffee"  -> "cup"
+    "Soup"    -> "bowl"
+    "Pancake" -> "stack"
+    _         -> "???"
+
+-- Variable in pattern matching
+-- to save value from the left side for used in the right side store them in variable 
+
+use Universal
+magicNumber : Nat -> Text
+magicNumber guess = match guess with
+  42 -> "magic 🪄"
+  n -> toText n ++ " is not the magic number. Guess again."
+-- Here n is a variable that will bind to any value of type Nat.
+-- It's also functioning as a fallback value, and in the example above whatever value 
+-- it has can be used to produce a desired Text result
+
+-- Guard pattern
+-- Provide finer grain control inside pattern matching construct. They have access to all
+-- variables in the construct. Start with |(where) symbol and the right of | must return Boolean
+-- if the value is true then the block on the right side of -> is executed
+
+use Universal
+use Text
+matchNum : Nat -> Text
+matchNum num = match a with
+  oneTwo | (oneTwo === 1) || (oneTwo === 2) -> "one or two"
+  threeFour | (threeFour === 3) || (threeFour === 4) -> "three or four"
+  fiveSix | (fiveSix === 5) || (fiveSix === 6) -> "five or six "
+  _ -> "no match"
+
+
+-- case syntax
+-- when the last value or set of values are being compared against successive cases 
+-- use the cases shorthand rather than writing out the full match statement.
+myMatch : Nat -> Text
+myMatch nat = match nat with
+  n | n < 3 -> "small number"
+  _ -> "big number"
+
+-- But it can also be shorter:
+
+myMatch : Nat -> Text
+myMatch = cases
+  n 
+    | n Nat.< 3 -> "small number"
+    | otherwise -> "big number"
+
+twoCases : Nat -> Nat -> Text
+twoCases = cases
+  n1, n2 
+    | n1 Nat.== n2 -> "same value"
+    | otherwise    -> "different values"
+

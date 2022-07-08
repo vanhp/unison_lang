@@ -1,0 +1,33 @@
+-- Record type
+
+
+-- started with the name of the type and open curly braces to the right of the equals sign. 
+-- Each field name is named and given a type in a comma-separated list.Record types are 
+-- supported for types which have asingle data constructor. 
+-- Unison creates a data constructor for you with the same name as the overall type.
+
+unique type Volunteer
+  = { preferredName : Text,
+    age : Nat,
+    desiredStartDate : Text,
+    endDate : Optional Text,
+    daysAvailable : Set DaysOfWeek }
+
+-- Record types allow you to define a type with individually named field names
+-- Record types are for types with a single data constructor
+-- Record types automatically generate functions which get, set, and modify values for the record
+
+-- Types with a single data constructor can also be defined in the following style
+Point2 = {x : Nat, y : Nat}
+
+-- This assigns names to each argument of the constructor. 
+-- The effect of this is to generate some accessor methods, to help get, set, and modify each field.
+Point2.x : Point2 -> Nat
+x.modify : (Nat ->{g} Nat) -> Point2 ->{g} Point2
+x.set : Nat -> Point2 -> Point2
+y : Point2 -> Nat
+y.modify : (Nat ->{g} Nat) -> Point2 ->{g} Point2
+y.set : Nat -> Point2 -> Point2
+-- Note that x.set and x.modify are returning new, 
+-- modified copies of the input record
+-- there's no mutation of values in Unison.

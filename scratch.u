@@ -1,0 +1,112 @@
+
+
+
+
+
+---
+List.range 0 10 =
+    |> List.map (x -> x Nat.* 100)
+    |> List.filter (const true)
+    |> List.foldLeft (Nat.+) 0
+
+    
+
+
+-- List
+-- List can only contain values of one type at a time, and are eagerly evaluated
+-- Lists are immutable  finitite and homogenous  (every element must have the same type)
+-- is parameterized on the type of elements of the lists
+-- An empty list is simply represented with 
+-- [] or with List.empty
+
+desserts : [Text]
+desserts = ["Eclair", "Peach cobbler", "Ice cream"]
+
+
+-- Maps
+-- The Map type is Unison's way of mapping unique keys to values.
+-- create a map with a single object with
+Map.singleton 1 "a" 
+-- where 1 is the key and "a" is the value associated with that key.
+
+-- to create a multi item map is from a List of tuples
+
+Map.fromList [(1, "a"), (2, "b"), (3, "c")]
+
+-- Sets
+-- A Map whose values are all Unit,() ,can be translated into a Set
+-- by wrapping the map in Set's data constructor
+map = Map.fromList [(1, ()), (2, ()), (3, ())]
+Set.Set map
+
+
+
+
+---
+
+use .base
+square : Nat -> Nat
+square x = x * x
+
+use test
+
+test> square.tests.ex1 = check(square 4 == 16)
+test> square.tests.prop1 = 
+        go _ = a = !gen.nat
+               b = !gen.nat
+               expect (square a * square b == square (a * b))
+        runs 100 go
+-- square x =
+--     use Nat *
+--     x * x
+-- square x = x * x
+--     test > square.tests.ex1 =
+--     use Nat ==
+--     check (square 4 == 16)
+
+
+> square 30
+
+> base.List.reverse [1,2,3,4]
+> 4 + 5
+> 5.0 /2.0
+> not true
+
+-- square : Nat -> Nat
+-- square x = x * x
+--   test > square.tests.ex1 =
+--     use Nat ==
+--     check (square 4 == 16)
+
+
+
+-- this is a comment
+
+
+---
+
+Map.fromList [(1,"a"),(2,"b"),(3,"c")]
+Bin 3 2 "b" (Bin 1 1 "a" Tip Tip)(Bin 1 3 "c" Tip Tip)
+
+dessert : [Text]
+dessert [ ["hi","Peach","Ice"]]
+dessert [ ["hi","Peach","Ice"]]
+
+---
+
+getByteSize : (Text,Bytes,Text) -> Nat
+getByteSize tuple3 =
+    use Bytes ++
+    first = at1  tuple3
+    bytes = at2 tuple3
+    last = at3 tuple3
+    Bytes.size (toUtf8 first ++ bytes ++ toUtf8 lastt)
+    -- Bytes.getbyteSize (toUtf8 first ++ bytes ++ toUtf8 last)
+
+getByteSize ("Shepherds", 0xsdeadbeef,"Pie")
+
+---
+dessertOrder = ("Alice","Blueberry  pie","chocolate cake",5)
+at4 dessertOrder
+
+-- product ns = foldl (*) 1 ns 
