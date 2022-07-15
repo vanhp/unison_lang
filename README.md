@@ -5,5 +5,6 @@ Provide basic unison language and feature
 AST of the code 
 - Unison uses hash code as a link to the AST in the database
 - text code is just an alias to the AST may be rename or discard
+
 Unison is pure functional language that look similar to Haskill and F#. 
 It's leaning toward distribute and cloud base computing.

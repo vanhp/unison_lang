@@ -23,6 +23,12 @@ myListFunction
 -- "Even found"
 
 -- Boolean Expressions
--- and &&
--- or ||
--- not
+-- can be short-circuit
+--  and && if the first argument is false the rest is not evaluated
+false && (base.bug "oh no")
+--  or || if the first argument is true the rest is not evaluated
+true || (base.bug "oh no")
+-- not use to negate boolean value
+not true
+
+-- no looping construct?

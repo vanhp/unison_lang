@@ -1,7 +1,14 @@
 
 -- Unison Data type
 
--- Use the type keyword to define a type. A type definition needs a modifier of
+-- in Unison there are two type of objects. Type and term.
+-- Type is a composite object that may have complicate component.
+-- Term is every thing else that is not type.
+
+-- Use the type keyword to define a type. Type has two structure
+-- structural type and unique type. 
+-- 
+-- A type definition needs a modifier of
 -- unique or structural before it the values after the equals sign are known as
 -- data constructors. Each data constructor is separated by a pipe which means that the
 -- Genre type can be Poetry or Fiction or CookBooks etc.
@@ -40,4 +47,7 @@ unique type Box a = Box b
 -- where a and b are type parameter or place holder (T)
 -- on the right side of = is a type constructor
 
--- Either data type use to represent case where a value can be one or the other 
+-- Either type
+-- Either data type is a built-in data type. 
+-- It use to represent case where a value can be one or the other 
+structural type Either a b = Right b | Left a

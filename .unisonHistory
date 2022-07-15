@@ -1,0 +1,16 @@
+view Either
+view Either
+ls
+exit
+cd ..
+pwd
+ls
+Text.dropRightWhile isWhitespace "lovely snipe and tender turn \n\r"
+ui
+view base.List.foldLeft
+view 5
+view 4
+find : [a]->[a]
+find:[a]->[a]
+ls base.List
+ls

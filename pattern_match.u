@@ -1,6 +1,182 @@
 -- Unison support rich set of pattern matching
 
+-- match e with
+--   pattern_1 -> block_1
+--   pattern_2 -> block_2
+--   …
+--   pattern_n -> block_n
+--   _         -> block_x
+
+-- The evaluation semantics of match expressions are as follows:
+
+-- The scrutinee (e) is evaluated.
+-- The first pattern is evaluated and matched against the value of the scrutinee.
+-- If the pattern matches, any variables in the pattern are substituted into the block 
+-- to the right of its -> (called the match body)and the block is evaluated then stop.
+-- If the pattern doesn’t match then the next pattern is tried and so on.
+-- It is an error if none of the patterns match. 
+-- a catch all case must be present e.g. _ 
+-- short hand syntax in the case where the scrutinee is 
+-- the sole argument of a lambda expression:
+-- for example:
+-- cases
+--   pattern_1 -> block_1
+--   pattern_2 -> block_1
+--   _         -> block_1
+
+-- Pattern Forms
+
+-- Blank patterns
+-- A blank patternhas the form _
+-- It matches any expression without creating a variable binding.
+-- For example:
+_ = 42
+"Always matches"
+⧨
+"Always matches"
+-- Literal patterns
 -- matching on literals
+-- A literal patternis a literal Boolean,Nat,Int,Char,Text
+-- A literal pattern matches if the scrutinee has that exact value.
+-- For example:
+
+match 2 Nat.+ 2 with
+  4 -> "Matches"
+  _ -> "Doesn't match"
+⧨
+"Matches"
+-- Variable patterns
+-- A variable pattern is a regular identifier and matches any expression. 
+-- The expression that it matches will be bound to that 
+-- identifier as a variable in the match body.
+-- For example:
+
+match 1 + 1 with
+  x -> x + 1
+
+-- As-patterns
+-- Anas-patternhas the form v@p where v is a regular identifier and p
+-- is a pattern. This pattern matches if p matches, and the variable v
+-- will be bound in the body to the value matching p.
+-- For example, this expression evaluates to 3:
+
+matchExpression : Nat
+matchExpression =
+  use Nat +
+  match 1 + 1 with
+    x@4 ->
+      use Nat *
+      x * 2
+    y@2 -> y + 1
+    _   -> 22
+
+-- constructor patterns
+
+-- Has a form `C p1 p2 … pn'' where C is the name of constructor in scope,p1...pn are patterns
+-- such that n(may be 0) is arity of C. Will match if e reduce to constructor of C, and p1...pn
+-- macth the arguments of the constructor.
+-- for example Some,None is constructor of Optional type to return the 3rd element of 
+-- the list xs if present or 0 if there was no 3rd element.
+xs = [0, 2, 3, 4, 5]
+match List.at 3 xs with
+  None   -> 0
+  Some x -> x
+⧨
+4
+
+-- List patterns
+-- A list pattern matches a List t for some typet and has one of three forms:
+
+-- 1. head List.+: tail matches a list with at least one element. The pattern
+-- head is matched against the first element of the list and 
+-- tail is matched against the suffix of the list with the first element removed.
+
+-- 2. init :+ last matches a list with at least one element. The pattern init
+-- is matched against the prefix of the list with the last element removed, and
+-- last is matched against the last element of the list.
+
+-- 3. A literal list pattern has the form [p1, p2, … pn]
+-- where p1 through pn are patterns. The patterns p1 through pn
+-- are matched against the elements of the list. 
+-- This pattern only matches if the length of the scrutinee is the same as 
+-- the number of elements in the pattern. The pattern [] matches the empty list.
+
+-- 4. part1 List.++ part2 matches a list which composed of the concatenation of part1 and
+-- part2.At least one of part1 or part2 must be a pattern with a known list length,
+--  otherwise it's unclear where the list is being split. For instance, [x, y] List.++ rest
+-- is okay as is start List.++ [x, y] ,but just a ++ b is not allowed.
+-- Examples:
+-- 1.
+first : [a] -> Optional a
+first = cases
+  h +: _ -> Some h
+  []     -> None
+
+-- 2.
+last : [a] -> Optional a
+last = cases
+  _ :+ l -> Some l
+  []     -> None
+
+-- 3.
+exactlyOne : [a] -> Boolean
+exactlyOne = cases
+  [_] -> true
+  _   -> false
+
+-- 4.
+lastTwo : [a] -> Optional (a, a)
+lastTwo = cases
+  start ++ [a, a2] -> Some (a, a2)
+  _                -> None
+
+-- 4.
+firstTwo : [a] -> Optional (a, a)
+firstTwo = cases
+  [a, a2] ++ rest -> Some (a, a2)
+  _               -> None
+
+-- Tuple patterns
+-- A tuple pattern has the form (p1, p2, … pn) where p1 through pn are patterns. 
+-- The pattern matches if the scrutinee is a tuple of the same arity as the pattern and
+-- p1 through pn match against the elements of the tuple. 
+-- The pattern(p) is the same as the patternp,and the pattern () matches the literal value ()
+-- of the trivial type {()} (both pronounced “unit”).
+-- For example, this expression evaluates to `4`:
+
+(a, _, c) = (1, 2, 3)
+a Nat.+ c
+⧨
+4
+
+-- Ability patterns (or Request patterns)
+-- Ability pattern only appears in an ability handler and has one of two forms 
+-- (see Abilities and ability handlers for details):
+
+-- 1. {C p1 p2 … pn -> k} where C is the name of an ability constructor in scope, and
+-- p1 through pn are patterns such that n is the arity of C. Note that n may be zero. 
+-- This pattern matches if the scrutinee  reduces to a fully applied invocation of 
+-- the ability constructor C and the patterns p1 through pn match the arguments to the constructor. 
+-- The scrutinee must be of type Request A T for some ability {A} and type T.The variable
+-- k will be bound to the continuation of the program. If the scrutinee has type
+-- Request A T and C has type X ->{A} Y ,then k has type Y -> {A} T
+
+-- 2. {p} where p is a pattern. This matches the case where the computation is pure
+-- (the value of type Request A T calls none of the constructors of the ability {A}).
+-- A pattern match on a Request is not complete unless this case is handled.
+
+-- Guard patterns
+-- Aguard patternhas the form p | g where p is a pattern and g
+-- is a Boolean expression that may reference any variables bound in p. 
+-- The pattern matches if p matches and g evaluates to true.
+-- For example, the following expression evaluates to 6:
+
+match 1 + 2 with
+  x
+    | x == 4     -> 0
+    | x + 1 == 4 -> 6
+  _              -> 42
+
 
 -- the pattern match syntax match f with identifies the target value that 
 -- the pattern match will make its comparisons against. After the with
@@ -48,7 +224,7 @@ matchNum num = match a with
   _ -> "no match"
 
 
--- case syntax
+-- case and otherwise syntax
 -- when the last value or set of values are being compared against successive cases 
 -- use the cases shorthand rather than writing out the full match statement.
 myMatch : Nat -> Text
@@ -58,8 +234,8 @@ myMatch nat = match nat with
 
 -- But it can also be shorter:
 
-myMatch : Nat -> Text
-myMatch = cases
+myMatch_short : Nat -> Text
+myMatch_short = cases
   n 
     | n Nat.< 3 -> "small number"
     | otherwise -> "big number"
@@ -70,3 +246,94 @@ twoCases = cases
     | n1 Nat.== n2 -> "same value"
     | otherwise    -> "different values"
 
+
+-- Pattern match on data type
+
+unique type Lunch = Soup Text | Salad Text | Mystery Text Boolean
+unique type Utensil = Fork | Knife | Spoon
+
+-- pattern match on data constructor
+placeSetting : Lunch -> [Utensil]
+placeSetting = cases
+  Soup soupName   -> [Spoon]
+  Salad saladName -> [Fork, Knife]
+  _               -> [Spoon, Fork, Knife]
+
+-- Data type decomposition
+-- a way to make use of value (field) inside the type
+-- use the _ to indicate the decomposed value is going to be ignored by logic on the right
+-- the _ must be present even the case the whole value is ignored 
+-- to avoid error of not cover all cases and mismatch
+placeSetting : Lunch -> [Utensil]
+placeSetting = cases
+  Soup "Hearty Chunky Soup"   -> [Fork, Spoon] -- combine a literal pattern match with a data constructor
+  Soup _                      -> [Spoon]       -- match on any value 
+  Salad _                     -> [Fork, Knife] -- that Soup or Salad data constructor might enclose
+  Mystery mysteryMeal isAlive ->                              -- extracts the values being provided to
+    use Text ==                                               -- the Mystery data constructor as
+    if (mysteryMeal == "Giant Squid") && isAlive then [Knife] -- pattern match variablesfor use on the right
+    else [Spoon, Fork, Knife]
+  _                           -> [Spoon, Fork, Knife]         -- any value is not important
+
+-- As pattern (@)
+-- pattern match on the Right side of an Either,inspect its content, and use the entire
+-- Left value in an expression to the right of arrow in a match case
+myMatch_as : Either Text Text -> Either Text Text
+myMatch_as = cases
+  Right _ -> Right "I found a Right"
+  Left b  | b === "oh no" -> Left b
+  Left _  -> Left "I found a Left"
+myMatch_as (Left "oh no")
+
+
+unique type Hydra = Heads Nat Nat Nat Nat Nat
+
+slayHydra : Nat -> Hydra -> Optional Hydra
+slayHydra attack = cases
+  Heads h1 h2 immortal h4 h5 
+    | attack Nat.!= immortal -> Some (Heads h1 h2 immortal h4 h5)
+    | attack Nat.== immortal -> None
+
+-- using @ pattern
+-- it help to simplify complicate expression and make code easier to understand
+-- The as-pattern binds a variable name to some part of the element being pattern matched on. 
+-- Its form is variableName@someElement
+-- The variable can then be used to on the right of the arrow in pattern match.
+slayHydra_as : Nat -> Hydra -> Optional Hydra
+slayHydra_as attack = cases
+  hydra@(Heads h1 h2 immortal h4 h5) | attack Nat.!= immortal -> Some hydra
+  Heads h1 h2 immortal h4 h5         | attack Nat.== immortal -> None
+
+-- Pattern matching on List
+-- Pattern matching on List elements has its own special syntax
+
+-- Head and tail pattern matching
+-- use pattern matching to scrutinize the first (left-most) element of a list with the +: syntax.
+match ["a", "b", "c"] with
+  head +: tail -> head
+  _            -> "empty list"
+-- The +: operator is unpacking the first element (head) of the list to get its text value "a"
+-- while keeping the remaining elements (tail) as a List.
+-- The underscore _ will match the "empty list" case. We could have also expressed
+-- _ -> "empty list" or [] -> "empty list" or List.empty -> "empty list".
+
+-- pattern match on the last(right-most) element of a list
+match ["a", "b", "c"] with
+  firsts :+ last -> last
+  []             -> "empty list"
+
+
+-- pattern match on the first 2 elements of a given list
+-- pattern match on a particular list segment length or list segment values,
+-- you can use the [_] list constructor syntax!
+match ["a", " b", "c "] with
+  [first, second] ++ remainder ->
+    use Text ++
+    first ++ " yes!"
+  _                            -> "fallback"
+
+-- don't care about binding the list elements to variables
+-- use underscores to pattern match on any list that has exactly [_] elements:
+match ["a", " b", "c "] with
+  [_, _] ++ remainder -> "list has at least two elements"
+  _                   -> "fallback"

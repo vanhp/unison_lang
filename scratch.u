@@ -1,17 +1,17 @@
 
-
-
-
-
 ---
+
+> Text.dropRightWhile isWhitespace " asdfaf asdff\n\r"
+
+
 List.range 0 10 =
     |> List.map (x -> x Nat.* 100)
     |> List.filter (const true)
     |> List.foldLeft (Nat.+) 0
 
-    
+> List.range 0 20    
 
-
+---
 -- List
 -- List can only contain values of one type at a time, and are eagerly evaluated
 -- Lists are immutable  finitite and homogenous  (every element must have the same type)
@@ -83,10 +83,7 @@ test> square.tests.prop1 =
 -- this is a comment
 
 
----
-
-Map.fromList [(1,"a"),(2,"b"),(3,"c")]
-Bin 3 2 "b" (Bin 1 1 "a" Tip Tip)(Bin 1 3 "c" Tip Tip)
+---Text.dropRightWhile isWhitespace "lovely snipe and tender turn \n\r"Tip Tip)
 
 dessert : [Text]
 dessert [ ["hi","Peach","Ice"]]
@@ -109,4 +106,3 @@ getByteSize ("Shepherds", 0xsdeadbeef,"Pie")
 dessertOrder = ("Alice","Blueberry  pie","chocolate cake",5)
 at4 dessertOrder
 
--- product ns = foldl (*) 1 ns 
