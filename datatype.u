@@ -1,5 +1,84 @@
 
 -- Unison Data type
+-- It's a statically type language
+
+
+-- Type variable
+-- Any regular identifer may be used as variable name and in lowercase.
+
+-- Polymorphic types
+-- Polymorphic or generic type may be instantiated as any type e.g. [] may instantiated 
+-- as Int [Int],or Boolean [Boolean] etc...
+
+-- Scope type
+-- Type variables introduced by a type signature for a term 
+-- remain in scope throughout the definition of that term.
+-- ex1 : x -> y -> x
+-- ex1 a b =
+--   temp : x -- has type x
+--   temp = a
+--   a
+
+-- ex2 : x -> y -> x
+-- ex2 a b =
+-- -- doesn’t refer to x in outer scope
+-- id : ∀ x . x -> x -- shardow outer x
+-- id v = v
+-- temp = id 42
+-- id a
+
+-- Kind of type
+-- every type must be some kind which have this form:
+-- A nullary type constructor or ordinary type has kind of Type.
+-- A type constructor has kind k1 -> k2 where k1 and k2 are kinds.
+-- For example List,a unary type constructor, has kind Type -> Type
+-- as it takes a type and yields a type. 
+-- A binary type constructor like -> has kind Type -> Type -> Type ,as it takes two types 
+
+-- Function type
+-- The type X -> Y is a type for functions that take arguments of type X and yield results of type Y
+-- Application of the binary type constructor -> associates to the right, 
+-- so the type X -> Y -> Z is the same as the type X -> (Y -> Z)
+
+-- High-order type
+-- A type constructor of kind (Type -> Type) -> Type
+-- is a higher-order type constructor (it takes a unary type constructor and yields a type).
+
+-- Tuple type
+-- A type that can contain any type as the same time and has positional significan.
+-- The type (A,B) is a type for binary tuples (pairs) of values, one of type A and another of type B
+-- The type (A) is not a tuple type
+-- Tuple a b c is same as (a,b,c)
+-- The nullary tuple type () is the type of the unique value also written () and is pronounced “unit”.
+
+-- Built-in type
+-- Nat is the type of 64-bit natural numbers, also known as unsigned integers. 
+-- They range from 0 to 18,446,744,073,709,551,615.
+-- Int is the type of 64-bit signed integers. 
+-- They range from -9,223,372,036,854,775,808 to +9,223,372,036,854,775,807.
+-- Float is the type ofIEEE 754-1985 double-precision floating point numbers.
+-- Boolean is the type of Boolean expressions whose value is true or false.
+-- Bytes is the type of arbitrary-length 8-bit sequences. 
+-- Text is the type of arbitrary-length strings of Unicode text.
+-- Char is the type of a single Unicode character.
+-- The trivial type () (pronounced “unit”) is the type of the nullary tuple. 
+-- There is a single data constructor of type () and it’s also written ().
+
+-- Built-in type constructors
+-- Unison has the following built-in type constructors. 
+-- (->) is the constructor of function types. A type X -> Y is the type of functions from X to Y
+
+-- Tuple is the constructor of tuple types. See tuple types for details on tuples.
+-- List is the constructor of list types. 
+-- A type List T is the type of arbitrary-length sequences of values of type T.
+-- The type [T] is an alias for List T
+-- abilities.Request is the constructor of requests for abilities. A type Request A T
+-- is the type of values received by ability handlers for the ability A
+-- where current continuation requires a value of type T.
+
+-- User-defined types
+
+
 
 -- in Unison there are two type of objects. Type and term.
 -- Type is a composite object that may have complicate component.
@@ -14,6 +93,7 @@
 -- Genre type can be Poetry or Fiction or CookBooks etc.
 
 -- Type constructor
+-- A constructor is a function that instantiated object of that type
 -- Unison type constructor is called data constructor it appear on the right side of =
 -- and can be any name. It is a function whose job is to create a type as indicate on the left side.
 -- It takes the input argument and return the type to the left side 
