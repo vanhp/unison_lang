@@ -1,5 +1,5 @@
 
-# <span style="color:lightblue">Unison Data type</span>
+# $\color{orange}{Unison Data type}$
 It's a statically type language
 
 
