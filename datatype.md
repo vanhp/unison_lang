@@ -1,5 +1,5 @@
 
-# $\color{orange}{Unison\hspace{10pt} Data\hspace{10pt} type}$
+# $\color{orange}{Unison\hspace{1pt} Data\hspace{1pt} type}$
 It's a statically type language
 
 
