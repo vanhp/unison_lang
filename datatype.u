@@ -77,6 +77,26 @@
 -- where current continuation requires a value of type T.
 
 -- User-defined types
+-- use type keyword to define a new type. 
+-- the type  may have modifier like
+-- 1. unique
+-- 2. structural
+
+-- structural type Optional a = Some a | None
+
+-- The = symbol splits the definition into aleft-hand side and right-hand side,much like term definitions.
+-- The left side has:
+--     1.  the name for the data type (Optional)
+--     2.  declares a new type constructor with that name (Optional)
+--     3.  argument for the type (a)
+-- The right-hand side is data constructor may  has:
+--     1. zero or more data constructors separated by | 
+--     2. name of data constructor (Some,None)
+--     3. type of argument
+--     4. may also refer to the name given to the type in the left-hand side, 
+--         in which case it is a recursive type declaration.
+
+
 
 
 
