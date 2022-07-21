@@ -1,18 +1,22 @@
 
 # $\color{orange}{Unison\hspace{2pt} Data\hspace{2pt} type}$
-It's a statically type language
+Unison is a strong statically type language that also have powerful type inference. There is no needed to specify type on most situation. On a few circumstance when the system can't deduce the type of argument then it will ask you to provide the type.
 
 
-## <span style="color:forestgreen">Type variable</span>
+## $\color{forestgreen}{Type \hspace{2pt}variable}$
+
 Any regular identifer may be used as variable name and in lowercase.
 
-### <span style="color:salmon">Polymorphic types</span>
+
+ ### $\color{salmon}{Polymophic \hspace{2pt}type}$
 Polymorphic or generic type may be instantiated as any type e.g. [] may instantiated 
 as Int [Int],or Boolean [Boolean] etc...
 
-#### <span style="color:coral">Scope type</span>
+
+ #### $\color{coral}{Scope \hspace{2pt}type}$
 Type variables introduced by a type signature for a term 
 remain in scope throughout the definition of that term.
+
 ```haskell
 ex1 : x -> y -> x
 ex1 a b =
@@ -28,31 +32,35 @@ ex2 a b =
     temp = id 42
     id a
 ```
-## <span style="color:forestgreen">Kind of type</span>
-every type must be some kind which have this form:
+## $\color{forestgreen}{Kind \hspace{2pt} of \hspace{2pt}type}$
+
+Unison type always has a kind which have this form:
 A nullary type constructor or ordinary type has kind of Type.
 A type constructor has kind $\color{orange}{k1 \rightarrow k2}$ where k1 and k2 are kinds.
 For example List,a unary type constructor, has kind Type -> Type
 as it takes a type and yields a type. 
 A binary type constructor like -> has kind Type -> Type -> Type ,as it takes two types 
 
-## <span style="color:forestgreen">Function type</span>
+## $\color{forestgreen}{Function \hspace{2pt}type}$
+
 The type $\color{orange}{X \rightarrow Y}$ is a type for functions that take arguments of type $\color{orange}{X}$ and yield results of type $\color{orange}{Y}$
 Application of the binary type constructor -> associates to the right, 
 so the type $\color{orange}{X \rightarrow Y \rightarrow Z}$ is the same as the type $\color{orange}{X \rightarrow (Y \rightarrow Z)}$ 
 
-## <span style="color:forestgreen">High-order type</span>
+## $\color{forestgreen}{High-Order \hspace{2pt}type}$
+
 A type constructor of kind $\color{orange}{(Type \rightarrow Type) \rightarrow Type}$
 is a higher-order type constructor (it takes a unary type constructor and yields a type).
 
-## <span style="color:forestgreen">Tuple type</span>
+
+## $\color{forestgreen}{Tuple \hspace{2pt}type}$
 A type that can contain any type as the same time and has positional significan.
 The $\color{orange}{Type(A,B)}$ is a type for binary tuples (pairs) of values, one of type A and another of type B
 The type (A) is not a tuple type
 Tuple a b c is same as (a,b,c)
 The nullary tuple type () is the type of the unique value also written () and is pronounced “unit”.
 
-## <span style="color:forestgreen">Built-in type</span>
+## $\color{forestgreen}{Built-in \hspace{2pt}type}$
 - Nat is the type of 64-bit natural numbers, also known as unsigned integers. 
 They range from 0 to 18,446,744,073,709,551,615.
 - Int is the type of 64-bit signed integers. 
@@ -65,7 +73,8 @@ They range from -9,223,372,036,854,775,808 to +9,223,372,036,854,775,807.
 - The trivial type () (pronounced “unit”) is the type of the nullary tuple. 
 - There is a single data constructor of type () and it’s also written ().
 
-### <span style="color:salmon">Built-in type constructors</span>
+
+### $\color{salmon}{Built-in \hspace{2pt}type \hspace{2pt} constructor}$
 Unison has the following built-in type constructors. 
 $\color{orange}{(\rightarrow)}$ is the constructor of function types. A $\color{orange}{X \rightarrow Y}$ is the type of functions from $\color{orange}{X}$ to $\color{orange}{Y}$
 
@@ -77,7 +86,7 @@ abilities.Request is the constructor of requests for abilities. A type Request A
 is the type of values received by ability handlers for the ability A
 where current continuation requires a value of type T.
 
-## <span style="color:forestgreen">User-defined types</span>
+## $\color{forestgreen}{User \hspace{2pt}define \hspace{2pt} type}$
 use type keyword to define a new type. 
 the type  may have modifier like
 1. unique
@@ -101,39 +110,44 @@ The $\color{orange}{=}$ symbol splits the definition into aleft-hand side and ri
 
 
 
-in Unison there are two type of objects. Type and term.
-Type is a composite object that may have complicate component.
+In Unison there are two type of objects. 
+1. Type and 
+2. term.
+
+Type is a composite object that may have complex component.
 Term is every thing else that is not type.
 
-Use the type keyword to define a type. Type has two structure
-structural type and unique type. 
- 
+
 A type definition needs a modifier of
 unique or structural before it the values after the equals sign are known as
 data constructors. Each data constructor is separated by a pipe which means that the
 Genre type can be Poetry or Fiction or CookBooks etc.
 
-### <span style="color:salmon">Type constructor</span>
+
+### $\color{salmon}{Type \hspace{2pt}constructor}$
 A constructor is a function that instantiated object of that type
 Unison type constructor is called data constructor it appear on the right side of =
 and can be any name. It is a function whose job is to create a type as indicate on the left side.
 It takes the input argument and return the type to the left side 
 
 
-### <span style="color:salmon">type modifier</span>
+### $\color{salmon}{Type \hspace{2pt}modifier}$
  Unison have two type modifier structural and unique modifier.
  Structural signify that the type is structurally identical and may replace with similar Structure
  Unique modifer indicate that the type is one of a kind and can not be substituted with any type and
  its name is not interchangeble.
 
- ### <span style="color:salmon">Structure modifer</span>
+
+ #### $\color{coral}{Structure \hspace{2pt}modifer}$
  Use structural to indicate that name is not important so the 
  type is identical to each other and interchangeble even with difference name.
  when the data constructor and paramenter are the same type
  it serves as generic T a place holder for specific type
+ ```haskell
 structural type Weekday = Mon | Tues | Wed | Thurs | Fri
+```
 
- ### <span style="color:salmon">Unique modifier</span>
+ #### $\color{coral}{Unique \hspace{2pt}modifer}$
  Use to indicate that the name is semantically important can't be substituted
  ```haskell
 unique type Genre
