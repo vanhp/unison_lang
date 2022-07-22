@@ -60,6 +60,33 @@ The type (A) is not a tuple type
 Tuple a b c is same as (a,b,c)
 The nullary tuple type () is the type of the unique value also written () and is pronounced “unit”.
 
+### $\color{salmon}{Tuple \hspace{2pt}pattern \hspace{2pt} decomposition}$
+
+A simple way to match component of Tuple and then bind that value to variable to be used later at the same time using at1,at2,at3 functions of the Tuple type 
+```haskell
+getByteSize : (Text, Bytes, Text) -> Nat
+getByteSize tuple3 =
+  use Bytes ++
+  first = at1 tuple3
+  bytes = at2 tuple3
+  last = at3 tuple3
+  Bytes.size (toUtf8 first ++ bytes ++ toUtf8 last)
+getByteSize ("Shepherds", 0xsdeadbeef, "Pie")
+⧨
+16 
+-- or do this inside a function only
+
+getByteSize : (Text, Bytes, Text) -> Nat
+getByteSize tuple3 =
+  use Bytes ++
+  "tuple decomposition 👇"
+  let
+    (first, bytes, last) = tuple3
+    Bytes.size (toUtf8 first ++ bytes ++ toUtf8 last)
+
+```
+
+
 ## $\color{forestgreen}{Built-in \hspace{2pt}type}$
 - Nat is the type of 64-bit natural numbers, also known as unsigned integers. 
 They range from 0 to 18,446,744,073,709,551,615.

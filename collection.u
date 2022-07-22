@@ -1,12 +1,5 @@
 
--- Collection data structure in Unison
 
--- List
--- List can only contain values of one type at a time, and are eagerly evaluated
--- Lists are immutable  finitite and homogenous  (every element must have the same type)
--- is parameterized on the type of elements of the lists
--- An empty list is simply represented with 
--- [] or with List.empty
 
 desserts : [Text]
 desserts = ["Eclair", "Peach cobbler", "Ice cream"]
